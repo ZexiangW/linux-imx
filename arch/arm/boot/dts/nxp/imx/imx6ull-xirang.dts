@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Xirang board device tree.
+ *
+ * Start from the i.MX6ULL 14x14 EVK eMMC layout. Project-specific changes can
+ * be added here as the hardware definition is refined.
+ */
+
+#include "imx6ull-14x14-evk-emmc.dts"

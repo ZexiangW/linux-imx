@@ -1,17 +1,32 @@
 #!/usr/bin/env bash
 
-source /opt/fsl-framebuffer/5.0-snapshot-20260716/environment-setup-cortexa7t2hf-neon-fsl-linux-gnueabi
+set -euo pipefail
 
-export ARCH=arm
-export CROSS_COMPILE="$TARGET_PREFIX"
+JOBS=8
+DEFCONFIG=imx_xirang_defconfig
+DTB_TARGET=nxp/imx/imx6ull-xirang.dtb
+DTB_PATH="arch/arm/boot/dts/${DTB_TARGET}"
+KERNEL_PATH="arch/arm/boot/zImage"
+BOOT_IMG="boot.img"
+KERNEL_CMDLINE=${KERNEL_CMDLINE:-"console=ttymxc0,115200 earlycon"}
 
-unset CC CXX CPP LD AS AR NM STRIP OBJCOPY OBJDUMP READELF
-unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
-unset PKG_CONFIG_SYSROOT_DIR PKG_CONFIG_PATH PKG_CONFIG_LIBDIR
+if [[ "${ARCH:-}" != "arm" || -z "${CROSS_COMPILE:-}" ]]; then
+	echo "Please source envsetup.sh before running build.sh" >&2
+	exit 1
+fi
 
-export HOSTCC=gcc
-export HOSTCXX=g++
-export HOSTSTRIP=strip
+make "${DEFCONFIG}"
+make -j"${JOBS}" zImage "${DTB_TARGET}"
 
-make imx_xirang_defconfig
-make zImage -j 8
+mkbootimg \
+	--kernel "${KERNEL_PATH}" \
+	--dtb "${DTB_PATH}" \
+	--cmdline "${KERNEL_CMDLINE}" \
+	--base 0x80000000 \
+	--kernel_offset 0x00008000 \
+	--tags_offset 0x00000100 \
+	--pagesize 2048 \
+	--header_version 2 \
+	--output "${BOOT_IMG}"
+
+echo "Created ${BOOT_IMG}"
