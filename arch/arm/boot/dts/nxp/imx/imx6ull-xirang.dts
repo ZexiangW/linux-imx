@@ -7,3 +7,19 @@
  */
 
 #include "imx6ull-14x14-evk-emmc.dts"
+
+&timing0 {
+	clock-frequency = <33000000>;
+	hactive = <800>;
+	vactive = <480>;
+	hfront-porch = <40>;
+	hback-porch = <88>;
+	hsync-len = <15>;
+	vfront-porch = <88>;
+	vback-porch = <44>;
+	vsync-len = <23>;
+	hsync-active = <1>;
+	vsync-active = <0>;
+	de-active = <1>;
+	pixelclk-active = <0>;
+};
