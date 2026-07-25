@@ -8,7 +8,7 @@ DTB_TARGET=nxp/imx/imx6ull-xirang.dtb
 DTB_PATH="arch/arm/boot/dts/${DTB_TARGET}"
 KERNEL_PATH="arch/arm/boot/zImage"
 BOOT_IMG="boot.img"
-KERNEL_CMDLINE=${KERNEL_CMDLINE:-"console=ttymxc0,115200 earlycon"}
+KERNEL_CMDLINE=${KERNEL_CMDLINE:-"console=ttymxc0,115200 earlycon root=/dev/mmcblk1p2 rootfstype=ext4 rw rootwait"}
 
 if [[ "${ARCH:-}" != "arm" || -z "${CROSS_COMPILE:-}" ]]; then
 	echo "Please source envsetup.sh before running build.sh" >&2
